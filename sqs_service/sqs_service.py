@@ -5,6 +5,13 @@ from collections import deque
 
 """Simple SQS queue messaging class
 Assumes credentials are presented before usage via environment variables
+
+Expected set environment variables:
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_DEFAULT_REGION
+- AWS_SESSION_TOKEN for IAM roles
+- AWS_SECURITY_TOKEN for IAM roles
 """
 
 
