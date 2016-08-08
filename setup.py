@@ -13,6 +13,6 @@ setup(
     license='MIT',
     packages=['sqs_service'],
     install_requires=[
-        'boto3>=1.4.0',
+        'boto3',
     ]
 )
