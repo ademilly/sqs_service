@@ -5,7 +5,7 @@ from distutils.core import setup
 
 setup(
     name='sqs_service',
-    version='0.1',
+    version='0.2',
     description='Python SQS Wrapper',
     author='Aurélien Demilly',
     author_email='demilly.aurelien@gmail.com',
