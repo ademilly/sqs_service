@@ -33,11 +33,8 @@ def run():
 
         if sqs_svc.has_got_messages():
             first_message = sqs_svc.get_first_message()
-            print 'Message received:', first_message.body
-            print 'Message is a', sqs_svc.get_attribute(
-                message=first_message,
-                attribute_name='MessageType'
-            )
+            print 'Message received:', first_message.body()
+            print 'Message is a', first_message.get_attribute('MessageType')
             first_message.delete()
 
 if __name__ == '__main__':

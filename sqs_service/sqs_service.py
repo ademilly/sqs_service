@@ -3,20 +3,20 @@
 import boto3
 from collections import deque
 
-"""Simple SQS queue messaging class
-Assumes credentials are presented before usage via environment variables
-
-Expected set environment variables:
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- AWS_DEFAULT_REGION
-- AWS_SESSION_TOKEN for IAM roles
-- AWS_SECURITY_TOKEN for IAM roles
-"""
+from sqs_message import SQSMessage
 
 
 class SQSService(object):
-    """Initialize sqs resource to be available for every class object"""
+    """Simple SQS queue messaging class
+    Assumes credentials are presented before usage via environment variables
+
+    Expected set environment variables:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_DEFAULT_REGION
+    - AWS_SESSION_TOKEN for IAM roles
+    - AWS_SECURITY_TOKEN for IAM roles
+    """
     sqs = boto3.resource('sqs')
 
     def __init__(self, queue_name):
@@ -29,8 +29,8 @@ class SQSService(object):
         """Listen to the queue
 
         Keyword arguments:
-        for_how_many -- number of message to get at once
-        with_attributes -- expected attributes in the message, [string]
+        for_how_many (int) -- number of message to get at once
+        with_attributes [str] -- expected attributes in the message
         """
 
         self.messages.extend(
@@ -54,19 +54,19 @@ class SQSService(object):
     def get_first_message(self):
         """Pop first message"""
 
-        return self.messages.popleft()
+        return SQSMessage(self.messages.popleft())
 
     def get_last_message(self):
         """Pop last message"""
 
-        return self.messages.pop()
+        return SQSMessage(self.messages.pop())
 
     def send(self, body='Hello', attributes={}):
         """Send message to the queue
 
         Keyword arguments:
-        body -- message body
-        attributes -- message attributes, should be a python dict {key: string}
+        body (str) -- message body
+        attributes ({key: str}) -- message attributes, should be a python dict
         """
 
         return self.queue.send_message(
@@ -77,6 +77,7 @@ class SQSService(object):
     @staticmethod
     def format_attribute(attributes):
         """Return a SQS message ready dict for message attributes"""
+
         attr_dict = {}
         for key in attributes:
             attr_dict[key] = {
@@ -85,11 +86,3 @@ class SQSService(object):
             }
 
         return attr_dict
-
-    @staticmethod
-    def get_attribute(message, attribute_name):
-        """Return value of attribute attribute_name of message"""
-
-        return message.message_attributes \
-            .get(attribute_name) \
-            .get('StringValue')
