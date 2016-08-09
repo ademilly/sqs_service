@@ -33,11 +33,13 @@ class SQSService(object):
         with_attributes [str] -- expected attributes in the message
         """
 
-        self.messages.extend(
-            self.queue.receive_messages(
-                MessageAttributeNames=with_attributes
-            )
-        )
+        for message in self.queue.receive_messages(
+            MessageAttributeNames=with_attributes
+        ):
+            if message.message_attributes is not None:
+                self.messages.append(
+                    message
+                )
 
         return self
 
